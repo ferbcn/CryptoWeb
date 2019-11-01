@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block heading %}
+  {{ resources | safe }}
+{% endblock %}
+
+
+{% block body %}
+
+  <div class="container" id="content">
+        <h4>Crypto Charts</h4>
+
+        <form id="chartparam">
+          <div class="form-group row">
+
+                <select class="custom-select form-control" id="coin_option" style="margin-left: 10%;">
+                  {% for option in options %}
+                    <option value="{{ option }}">{{ option }}</option>
+                  {% endfor %}
+                </select>
+
+                <select class="custom-select form-control" id="time_option" style="margin-left: 10%;">
+                  {% for time_option in time_options %}
+                    <option value="{{ time_option }}">{{ time_option }}</option>
+                  {% endfor %}
+                </select>
+
+                <select class="custom-select form-control" id="currency_option" style="margin-left: 10%;">
+                  {% for currency_option in currency_options %}
+                    <option value="{{ currency_option }}">{{ currency_option }}</option>
+                  {% endfor %}
+                </select>
+
+          </div>
+
+      </form>
+
+      <div id="myplot"></div>
+      <br>
+
+  </div>
+
+  <div class="container" style="font-size: sm;">
+    {% if coin_data %}
+      <h3>Top 100</h3>
+      <h5>prices in USD</h5>
+        <div class="row data_header" style="background-color: lightgrey;">
+          <div class="col-1">
+            #
+          </div>
+          <div class="col d-none d-lg-block d-xl-block" style="text-align: left;">
+            Name
+          </div>
+          <div class="col" style="text-align: center;">
+            Ticker
+          </div>
+          <div class="col d-none d-lg-block d-xl-block">
+            M.Cap
+          </div>
+          <div class="col d-none d-lg-block d-xl-block">
+            Volume
+          </div>
+          <div class="col">
+            Price
+          </div>
+          <div class="col">
+            1h
+          </div>
+          <div class="col">
+            24h
+          </div>
+        </div>
+        {% for coin in coin_data %}
+          <div class="row data_content" style="text-align: right; {% if forloop.counter|divisibleby:2 %}background-color: lightgrey;{% endif %}">
+            <div class="col-1">
+              {{ forloop.counter }}
+            </div>
+            <div class="col link d-none d-lg-block d-xl-block" style="text-align: left">
+              <a href="#" onclick="fetch_plot('{{ coin.symbol }}');">{{ coin.name }}</a>
+            </div>
+            <div class="col" style="text-align: center;">
+              <a href="#" onclick="fetch_plot('{{ coin.symbol }}');">{{ coin.symbol }}</a>
+            </div>
+            <div class="col d-none d-lg-block d-xl-block">
+              {{ coin.market_cap }}
+            </div>
+            <div class="col d-none d-lg-block d-xl-block">
+              {{ coin.volume }}
+            </div>
+            <div class="col">
+              {{ coin.price }}
+            </div>
+            <div class="col">
+              {{ coin.change_1h }}
+            </div>
+            <div class="col">
+              {{ coin.change_24h }}
+            </div>
+          </div>
+        {% endfor %}
+    {% endif %}
+  </div>
+
+</div>
+
+<script>
+
+  document.addEventListener('DOMContentLoaded', () => {
+    fetch_plot(0);
+  });
+
+  function fetch_plot(sym){
+        // clear previous graph
+        document.getElementById("myplot").innerHTML = "";
+
+        var coin_sel;
+        if (!sym)
+          coin_sel = document.getElementById('coin_option').value;
+        else
+          coin_sel = sym;
+//        console.log("Selection: ", coin_sel);
+        document.getElementById('coin_option').value=coin_sel;
+
+        var time_sel = document.getElementById('time_option');
+        var curr_sel = document.getElementById('currency_option');
+        //console.log(time_sel.value);
+
+        var url = "/crypto_plot?coin_option=" + coin_sel + "&time_option=" + time_sel.value + "&currency_option=" + curr_sel.value;
+        fetch(url)
+          .then(function(response) { return response.json(); })
+          .then(function(item) { Bokeh.embed.embed_item(item); })
+        //window.history.pushState('page', 'Title', '/');
+    }
+
+    // attach onchange event to form
+    document.getElementById("chartparam").addEventListener("change", function (){
+      fetch_plot(0);
+    });
+
+</script>
+
+{% endblock %}

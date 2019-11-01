@@ -1,0 +1,8 @@
+Django>=2.0.11
+bokeh
+bs4
+matplotlib
+requests
+wordcloud
+cryptocompy
+pyproj==1.9.6
