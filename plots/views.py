@@ -34,36 +34,33 @@ import numpy as np
 from cryptocompy import price
 from cryptocompy import coin as ccoin
 
-from wordcloud import WordCloud
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-
-from io import BytesIO
-import base64
-
-import uuid
-
-#from .models import 
+#from .models import
 
 import math
 
 coinList = {"BTC":"orange", "XMR":"red", "ETH":"grey", "NEO":"green"}
 timeList = {"hour":{"period":"minute", "count":60},"day":{"period":"minute", "count":1440}, "week":{"period":"hour", "count":168}, "month":{"period":"hour", "count":720},"year":{"period":"day", "count":366}}
 currencyList = {"USD":"USD", "EUR":"EUR", "CHF":"CHF", "BTC":"BTC"}
-colorOptions = ["Reds", "Blues", "Greens"]
 
 
-def index(request):
-    if request.user.is_authenticated:
-        user = request.user
-    else:
-        user = False
-    return render(request, "index.html", {"user":user})
+# retrives price data for single coin
+def get_graph_data(coin, currency, period):
+    times = []
+    prices = []
 
-def CoinMarketCapGetCoins(limit=100):
+    historical = price.get_historical_data(coin, currencyList[currency], timeList[period]["period"], info='close', aggregate=1, limit=timeList[period]["count"])
+    for data in historical:
+        dt = datetime.datetime.strptime(data["time"], "%Y-%m-%d %H:%M:%S")
+        times.append(dt)
+        if coin == currency:
+            prices.append(1)
+        else:
+            prices.append(data["close"])
+    return times, prices
+
+
+# retrives top100 coins from CMC and displays basic information
+def get_coin_data(limit=100):
     from requests import Request, Session
     from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
     import json
@@ -96,13 +93,13 @@ def CoinMarketCapGetCoins(limit=100):
             coins.append(item.get("symbol"))
 
             coin_data.append({
-            "symbol":item.get("symbol"),
-            "name":item.get("name"),
-            "market_cap":f'{round(item.get("quote").get("USD").get("market_cap")/1000000):,}',
-            "volume":f'{round(item.get("quote").get("USD").get("volume_24h")/1000000):,}',
-            "price": "{0:.2f}".format(item.get("quote").get("USD").get("price")),
-            "change_24h":("{0:.2f}".format(item.get("quote").get("USD").get("percent_change_24h"))),
-            "change_1h":("{0:.2f}".format(item.get("quote").get("USD").get("percent_change_1h"))),
+                "symbol":item.get("symbol"),
+                "name":item.get("name")[:15],
+                "market_cap":f'{round(item.get("quote").get("USD").get("market_cap")/1000000):,}',
+                "volume":f'{round(item.get("quote").get("USD").get("volume_24h")/1000000):,}',
+                "price": "{0:.2f}".format(item.get("quote").get("USD").get("price")),
+                "change_24h":("{0:.2f}".format(item.get("quote").get("USD").get("percent_change_24h"))),
+                "change_1h":("{0:.2f}".format(item.get("quote").get("USD").get("percent_change_1h"))),
             })
 
         #print(coin_data)
@@ -110,6 +107,14 @@ def CoinMarketCapGetCoins(limit=100):
       print(e)
 
     return coins, coin_data
+
+
+def index(request):
+    if request.user.is_authenticated:
+        user = request.user
+    else:
+        user = False
+    return render(request, "index.html", {"user":user})
 
 
 def crypto(request):
@@ -121,9 +126,10 @@ def crypto(request):
     #coin_options = list(coinList.keys()) + list(ccoin.get_coin_list(coins='all').keys())[:50]
     time_options = timeList.keys()
     currency_options = currencyList.keys()
-    coin_options, coin_data = CoinMarketCapGetCoins(limit=100)
+    coin_options, coin_data = get_coin_data(limit=100)
 
     return render(request, "plots/plots.html", {'resources':CDN.render(), 'options':coin_options, 'user':user, 'time_options':time_options, 'currency_options':currency_options, 'coin_data':coin_data})
+
 
 def crypto_plot(request):
     # get input variables
@@ -144,16 +150,7 @@ def crypto_plot(request):
     print(coin, period, currency)
 
     # retrive data from cryptocompy api
-    times = []
-    prices = []
-    historical = price.get_historical_data(coin, currencyList[currency], timeList[period]["period"], info='close', aggregate=1, limit=timeList[period]["count"])
-    for data in historical:
-        dt = datetime.datetime.strptime(data["time"], "%Y-%m-%d %H:%M:%S")
-        times.append(dt)
-        if coin == currency:
-            prices.append(1)
-        else:
-            prices.append(data["close"])
+    times, prices = get_graph_data(coin, currency, period)
 
     # generate graph
     PLOT_OPTIONS = dict(plot_width=800, plot_height=300, x_axis_type='datetime')

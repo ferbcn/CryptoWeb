@@ -103,40 +103,40 @@
 
 </div>
 
-<script>
+      <script>
 
-  document.addEventListener('DOMContentLoaded', () => {
-    fetch_plot(0);
-  });
+            document.addEventListener('DOMContentLoaded', () => {
+              fetch_plot(0);
+            });
 
-  function fetch_plot(sym){
-        // clear previous graph
-        document.getElementById("myplot").innerHTML = "";
+            function fetch_plot(sym){
+                  // clear previous graph
+                  document.getElementById("myplot").innerHTML = "";
 
-        var coin_sel;
-        if (!sym)
-          coin_sel = document.getElementById('coin_option').value;
-        else
-          coin_sel = sym;
-//        console.log("Selection: ", coin_sel);
-        document.getElementById('coin_option').value=coin_sel;
+                  var coin_sel;
+                  if (!sym)
+                    coin_sel = document.getElementById('coin_option').value;
+                  else
+                    coin_sel = sym;
+            //    console.log("Selection: ", coin_sel);
+                  document.getElementById('coin_option').value=coin_sel;
 
-        var time_sel = document.getElementById('time_option');
-        var curr_sel = document.getElementById('currency_option');
-        //console.log(time_sel.value);
+                  var time_sel = document.getElementById('time_option');
+                  var curr_sel = document.getElementById('currency_option');
+                  //console.log(time_sel.value);
 
-        var url = "/crypto_plot?coin_option=" + coin_sel + "&time_option=" + time_sel.value + "&currency_option=" + curr_sel.value;
-        fetch(url)
-          .then(function(response) { return response.json(); })
-          .then(function(item) { Bokeh.embed.embed_item(item); })
-        //window.history.pushState('page', 'Title', '/');
-    }
+                  var url = "/crypto_plot?coin_option=" + coin_sel + "&time_option=" + time_sel.value + "&currency_option=" + curr_sel.value;
+                  fetch(url)
+                    .then(function(response) { return response.json(); })
+                    .then(function(item) { Bokeh.embed.embed_item(item); })
+                  //window.history.pushState('page', 'Title', '/');
+              }
 
-    // attach onchange event to form
-    document.getElementById("chartparam").addEventListener("change", function (){
-      fetch_plot(0);
-    });
+              // attach onchange event to form
+              document.getElementById("chartparam").addEventListener("change", function (){
+                fetch_plot(0);
+              });
 
-</script>
+       </script>
 
 {% endblock %}
