@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,8 +21,19 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'hB4cO41/6KTL6CmB%3&VisYB30WZWom)oLrsMoN5R(XslOGzQY'
-#SECRET_KEY = 'i0&iq&e9u9h6(4_7%pt2s9)f=c$kso=k$c$w@fi9215s=1q0^d'
+try:
+    SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
+    print ("Secret Key found in environment!")
+except KeyError:
+    print ("Secret Key Not found in environment!")
+    try:
+        from config import DJANGO_SECRET_KEY
+        SECRET_KEY = DJANGO_SECRET_KEY
+        print ("Secret Key found in config file!")
+    except Exception:
+        print ("Secret Key Not found in config file!")
+        print ("No Secret Key found! Bye.")
+        sys.exit()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -32,7 +44,7 @@ ALLOWED_HOSTS = ['localhost', '192.168.1.148', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
-    'plots.apps.PlotsConfig',
+    'cryptoweb.apps.CryptoWebConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -122,4 +134,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'plots/static'),)
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'cryptoweb/static'),)

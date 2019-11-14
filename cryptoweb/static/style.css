@@ -1,0 +1,77 @@
+a {
+  color: firebrick;
+}
+
+a:hover {
+  color: red;
+}
+
+.link {
+  font-weight: bold;
+}
+
+body {
+    background-color: white;
+}
+
+.nav-item {
+    padding-left: 10px;
+}
+
+.subtitle {
+  font-size: small;
+  font-weight: normal;
+  color: darkgrey;
+  font-style: italic;
+}
+
+
+#content{
+  margin-top: 2%;
+}
+
+#coin_option, #currency_option, #time_option{
+  width: 20%;
+}
+
+.navbar-right {
+  margin-right: 10px;
+  margin-left: 0px;
+}
+
+.data_header{
+  font-size: larger;
+  font-weight: bold;
+  text-align: right;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.data_content{
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+}
+
+#clouds{
+  width: 100%;
+  height: auto;
+}
+
+#usercloud{
+  width: 100%;
+  height: auto;
+}
+
+
+#myplot{
+  width: 100%;
+}
+
+.custom-select{
+
+}
+
+#loadingmessage{
+  color: "red";
+}
