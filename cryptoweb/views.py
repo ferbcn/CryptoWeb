@@ -180,13 +180,13 @@ def crypto(request):
     except KeyError:
         request.session["timestamp"] = 0
 
-    # sorting commands received or default
+    # sorting commands received in url or default
     try:
         sort_by = request.GET["sort_by"]
     except KeyError:
-        sort_by = 'market_cap'
+        sort_by = None
 
-    # retrieve data every 60 seconds
+    # only retrieve data after 60 seconds
     if time.time() > request.session["timestamp"] + 60:
         market_data = get_market_data()
         coin_list, coin_data = get_coin_data(request, limit=100)
@@ -201,13 +201,16 @@ def crypto(request):
         coin_list =request.session["coin_list"]
         coin_data = request.session["coin_data"]
 
-    # sort data table if needed
-    if not sort_by == "market_cap":
+    # sort data if needed (default order is by market_cap)
+    if sort_by:
         print(f"Sorting data by {sort_by}...")
         rev_order = True
         if sort_by in ['symbol', 'name']:
             rev_order = False
-        coin_data.sort(key=lambda x: x[sort_by], reverse=rev_order)
+        try:
+            coin_data.sort(key=lambda x: x[sort_by], reverse=rev_order)
+        except KeyError:
+            print("Error sorting data!")
 
     resources=CDN.render()
     time_options = timeList.keys()
