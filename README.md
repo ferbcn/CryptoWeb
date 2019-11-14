@@ -17,5 +17,7 @@ DB driven user access and storage of user generated data
 - Responsive data tables (hide columns on small screens)
 
 ## TODO:
-- Heatmaps: add data retrieve from overpass + save to sqlite DB
-- Crypto: data table needs responsive font size
+- User Portfolio: add, remove coins
+
+## TO THINK:
+- price notifications system...
