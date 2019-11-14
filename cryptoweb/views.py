@@ -34,12 +34,13 @@ from cryptocompy import coin as ccoin
 
 #from .models import
 
-import math
+#import math
 
 coinList = {"BTC":"orange", "XMR":"red", "ETH":"grey", "NEO":"lightgreen", "XLM":"lightblue", "LTC":"silver", "XRP":"blue", "BCH":"green"}
 timeList = {"hour":{"period":"minute", "count":60},"day":{"period":"minute", "count":1440}, "week":{"period":"hour", "count":168}, "month":{"period":"hour", "count":720},"year":{"period":"day", "count":366}}
 currencyList = {"USD":"USD", "EUR":"EUR", "CHF":"CHF", "BTC":"BTC"}
 
+# retriev CMC API KEY and Django Security Key from environment or from file
 try:
     API_KEY = os.environ["CMC_API_KEY"]
     print("API Key found in environment")
