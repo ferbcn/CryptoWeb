@@ -345,7 +345,6 @@ def crypto(request):
     time_options = timeList.keys()
     currency_options = currencyList.keys()
 
-    print(market_data)
     return render(request, "cryptoweb/crypto.html", {'resources':CDN.render(), 'crypto_options':coin_list, 'user':user, 'time_options':time_options, 'currency_options':currency_options, 'coin_data':coin_data, 'market_data': market_data})
 
 
