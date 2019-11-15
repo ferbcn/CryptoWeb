@@ -2,6 +2,7 @@
 migrations/
 db0.sqlite3
 db.sqlite3
+cryptoweb/migrations/
 
 flaskenv/
 djangoenv/
