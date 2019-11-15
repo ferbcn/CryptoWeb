@@ -6,6 +6,7 @@
 - DB driven user access and storage of user generated portfolio data
 
 ![screenshot](cryptox.png)
+
 ## Features
 
 ### Crypto:
