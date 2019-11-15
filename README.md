@@ -1,9 +1,9 @@
 # CryptoWeb
 
 ## Description
-Website dedicated to the generation and display of data using different free APIs
-Mobile responsive website and graphical elements
-DB driven user access and storage of user generated data
+- Website dedicated to cryptocurrency price display using different free APIs (rate limits apply, use with responsability) 
+- Mobile responsive website and graphical elements
+- DB driven user access and storage of user generated data
 
 ![screenshot](cryptox.png)
 ## Features & Challenges
