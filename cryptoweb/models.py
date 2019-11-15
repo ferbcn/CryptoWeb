@@ -10,10 +10,3 @@ class Position(models.Model):
 
     def __str__(self):
         return f"Porfolio position: {self.quantity} x {self.ticker} at price {self.price}"
-
-class Cryptos(models.Model):
-    ticker = models.CharField(max_length=5)
-    name = models.CharField(max_length=64)
-
-    def __str__(self):
-        return f"Crypto Name: {self.name} with ticker: {self.ticker}"
