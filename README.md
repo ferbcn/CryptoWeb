@@ -4,6 +4,7 @@
 - Website dedicated to cryptocurrency price data display using different free APIs (rate limits apply, use with care)
 - Python Django backend using javascript, Bootstrap4 and CSS styling for a more or less mobile responsive user interface
 - DB driven user access and storage of user generated portfolio data
+- Graphical Price info generated with bokeh library https://docs.bokeh.org/en/latest/.
 
 ![screenshot](cryptox.png)
 
