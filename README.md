@@ -16,9 +16,17 @@
 - data retrieval, date&time manipulation, string formating
 - Responsive Charts generated with Bokeh
 - Responsive data tables (hide columns on small screens)
+- Data is chahed locally and retrieved from APIs every 60 seconds the most
 
 ### User Database
-- user portfolio with coin price retrieval
+- user portfolio with price retrieval and editing features
+- total price and value infos
 
 ### To Think:
-- price notifications system...
+- price notifications system
+- portfolio grsafical analysis and data 
+
+## Description
+1. Install dependencies: cryptomcompy (https://github.com/ttsteiger/cryptocompy) uses this free api (Cryptocompare API: https://www.cryptocompare.com/api)
+2. Additionally a CMC API KEY is needed for retrieval of some data (https://coinmarketcap.com/api/)
+3. For security reasons Djangos's SECURITY KEY has to be loaded from environment or from config.py file (not included)
