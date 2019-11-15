@@ -2,14 +2,11 @@
 
 ## Description
 - Website dedicated to cryptocurrency price data display using different free APIs (rate limits apply, use with care)
-- Mobile responsive website and graphical elements
+- Python Django backend using javascript, Bootstrap4 and CSS styling for a more or less mobile responsive user interface
 - DB driven user access and storage of user generated portfolio data
 
 ![screenshot](cryptox.png)
-## Features & Challenges
-### Python Django backend
-  - User creation and identification
-  - Sqlite3 DB for user portfolio
+## Features
 
 ### Crypto:
 - use of different APIs
@@ -21,6 +18,7 @@
 - Data for price graphs uses cryptocompy library by ttstieger (https://github.com/ttsteiger/cryptocompy), prices are pulled from (Cryptocompare API: https://www.cryptocompare.com/api)
 
 ### User Database
+- sqlite3 (saved locally)
 - user portfolio with price retrieval and editing features
 - total price and value infos
 
