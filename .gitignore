@@ -1,4 +1,8 @@
-#
+# DB
+migrations/
+db0.sqlite3
+db.sqlite3
+
 flaskenv/
 djangoenv/
 .DS_Store
