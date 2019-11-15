@@ -1,6 +1,5 @@
 from django.contrib import admin
-#from .models import Wordcloud, OpenMapPOI
+from .models import Position
 
 # Register your models here.
-#admin.site.register(Wordcloud)
-
+admin.site.register(Position)

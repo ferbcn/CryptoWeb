@@ -1,5 +1,5 @@
 a {
-  color: firebrick;
+  color: white;
 }
 
 a:hover {
@@ -34,38 +34,82 @@ body {
   width: 20%;
 }
 
+#crypto_input{
+
+}
+
 .navbar-right {
   margin-right: 10px;
-  margin-left: 0px;
+  margin-left: auto;
+}
+
+.navbar-red {
+  background-color: firebrick;
 }
 
 .data_header{
-  font-size: larger;
+  background-color: firebrick;
+  font-size: 16px;
   font-weight: bold;
   text-align: right;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  color: white;
 }
 
 .data_content{
   padding-top: 10px;
   padding-bottom: 10px;
-
+  border-radius: 1px;
+  border-color: firebrick;
 }
 
-#clouds{
-  width: 100%;
-  height: auto;
+.data_content:hover{
+  margin-top: -2px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-style: ridge;
+  border-radius: 1px;
+  border-color: firebrick;
+  background-color: firebrick;
+  color: white;
 }
 
-#usercloud{
-  width: 100%;
-  height: auto;
+#value_box{
+  /* background: rgba(200,255,200,1); */
+  background-color: firebrick;
+  color: white;
+  padding-top: 1.5vh;
+  padding-bottom: 1.5vh;
+  width: 70%;
+  margin-left: 15%;
 }
 
 
 #myplot{
   width: 100%;
+  min-height: 30vh;
+}
+
+.fade_in{
+  opacity: 1;
+  animation: fade-in 0.5s linear;
+}
+
+.fade_out{
+  opacity: 0;
+  animation: fade-out 0.5s linear;
+}
+
+
+@keyframes fade-in {
+  0% { opacity: 0 }
+  100% { opacity: 1 }
+}
+
+@keyframes fade-out {
+  0% { opacity: 1 }
+  100% { opacity: 0 }
 }
 
 .custom-select{

@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block heading %}
+  {{ resources | safe }}
+{% endblock %}
+
+
+{% block body %}
+
+
+    <div class="container" id="content">
+        <h4>My Portfolio</h4>
+    </div>
+
+    <div class="container" id="crypto_input">
+          <form action="{% url 'editportfolio' %}" method="post">
+              {% csrf_token %}
+              <div class="row">
+                    <div class="col">
+                        Symbol:
+                        <select id="input_ticker" class="form-control" name="ticker">
+                          {% for crypto in crypto_options %}
+                            <option value="{{ crypto.ticker }}">{{ crypto.ticker }}</option>
+                          {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col">
+                        Price:
+                        <input id="input_price" type="text" class="form-control" name="price" placeholder="8716.55">
+                    </div>
+                    <div class="col">
+                        Quantity:
+                        <input type="number" class="form-control" name="quantity" placeholder="0.111" required>
+                    </div>
+                    <div class="col" style="padding-top: 24px">
+                      <input class= "btn btn-danger" type="submit" value="Add">
+                    </div>
+              </div>
+          </form>
+    </div>
+    <br>
+
+
+    <div class="container">
+
+        <div class="row data_header" style="text-align: right;">
+            <div class="col" style="text-align: center">
+              Sym.
+            </div>
+            <div class="col">
+              Quant.
+            </div>
+            <div class="col d-none d-sm-block ">
+              Price
+            </div>
+            <div class="col d-none d-sm-block">
+              Latest
+            </div>
+            <div class="col">
+              Value
+            </div>
+            <div class="col">
+              Var.%
+            </div>
+            <div class="col d-none d-sm-block">
+              Del.
+            </div>
+        </div>
+        {% for position in user_portfolio %}
+          <div class="row data_content" style="text-align: right;">
+              <div class="col link" style="text-align: center">
+                {{ position.ticker }}
+              </div>
+              <div class="col">
+                {{ position.quantity }}
+              </div>
+              <div class="col d-none d-sm-block">
+                {{ position.pprice }}
+              </div>
+              <div class="col d-none d-sm-block">
+                {{ position.cprice }}
+              </div>
+              <div class="col">
+                {{ position.cvalue }}
+              </div>
+              <div class="col">
+                {{ position.cperf }}
+              </div>
+              <div class="col d-none d-sm-block">
+                <a href="/editportfolio?delete={{ position.id }}"><span style="color: dimgray;" class="oi oi-delete" title="delete" aria-hidden="true"></span></a>
+              </div>
+          </div>
+        {% endfor %}
+
+    </div>
+
+
+    <br>
+
+    <div class="container" id="value_box">
+        <div class="row" style="text-align: right; color: lightgrey;">
+            <div class="col">
+              <h6>Purchase Value:</h6>
+            </div>
+            <div class="col">
+              {% if total_purchase_value %}
+              <h6>{{ total_purchase_value }}</h6>
+              {% endif %}
+            </div>
+        </div>
+
+        <div class="row" style="text-align: right">
+            <div class="col">
+              <h5>Current Value:</h5>
+            </div>
+            <div class="col">
+              {% if total_value %}
+              <h5>{{ total_value }}</h5>
+              {% endif %}
+            </div>
+        </div>
+
+        <div class="row" style="text-align: right">
+            <div class="col">
+              <h5>Var.:</h5>
+            </div>
+            <div class="col">
+              {% if performance %}
+              <h5>{{ performance }} %</h5>
+              {% endif %}
+            </div>
+        </div>
+    </div>
+
+
+        <script>
+
+            // if input ticker has changed and when DOM has loaded: update price input box with current market price
+
+            document.getElementById('input_ticker').onchange = function() {
+                set_price();
+            };
+
+            document.addEventListener('DOMContentLoaded', () => {
+                set_price();
+            });
+
+
+            function set_price(sym){
+              sym = document.getElementById('input_ticker').value
+              price = get_price(sym);
+              document.getElementById('input_price').value = price;
+            }
+
+            function get_price(sym){
+              // TO-DO: make http request (fetch) and get current price for selected symbol
+              return 5555.55
+            }
+
+        </script>
+
+{% endblock %}

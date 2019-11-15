@@ -5,13 +5,13 @@
 {% endblock %}
 
 {% block body %}
-  <div class="container">
-      <h1>Error</h1>
+  <div class="container" style="padding-top: 10px">
+      <h1>Sorry...</h1>
 
       {{ message }}
 
       <hr>
 
-      <a href="{% url 'index' %}">Return to Index.</a>
+      <a href="{% url 'login' %}">Login</a>
   </div>
 {% endblock %}

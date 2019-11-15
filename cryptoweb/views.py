@@ -2,6 +2,7 @@ import os
 import sys
 import time
 import datetime
+import random
 
 import json
 import requests
@@ -32,7 +33,7 @@ from bokeh.palettes import gray, inferno, plasma, PuRd
 from cryptocompy import price
 from cryptocompy import coin as ccoin
 
-#from .models import
+from .models import Position
 
 #import math
 
@@ -137,26 +138,114 @@ def get_coin_data(request, limit=100):
         c_data = data["data"]
         #print(c_data)
         for item in c_data:
-            coin_list.append(item.get("symbol"))
-
+            coin_list.append({"ticker":item.get("symbol"), "name":item.get("name")})
             coin_data.append({
                 "symbol":item.get("symbol"),
                 "name":item.get("name")[:15],
+                "cmc_rank":item.get("cmc_rank"),
                 "market_cap":round(item.get("quote").get("USD").get("market_cap")/1000000),
                 "volume":round(item.get("quote").get("USD").get("volume_24h")/1000000),
                 "price": "{0:.2f}".format(item.get("quote").get("USD").get("price")),
                 "change_24h":("{0:.2f}".format(item.get("quote").get("USD").get("percent_change_24h"))),
                 "change_1h":("{0:.2f}".format(item.get("quote").get("USD").get("percent_change_1h"))),
             })
-
+    # no response from API
     else:
         print("Error getting market data from API.")
 
     return coin_list, coin_data
 
+
+def retrieve_data_session_or_new_api(request):
+    # only retrieve data after 60 seconds
+    if time.time() > request.session["timestamp"] + 60:
+        market_data = get_market_data()
+        coin_list, coin_data = get_coin_data(request, limit=100)
+        request.session["market_data"] = market_data
+        request.session["coin_data"] = coin_data
+        request.session["coin_list"] = coin_list
+        request.session["timestamp"] = time.time()
+        print("New market data stored in session at ", request.session["timestamp"])
+    else:
+        print("Reading data from session...")
+        market_data = request.session["market_data"]
+        coin_list =request.session["coin_list"]
+        coin_data = request.session["coin_data"]
+
+    return coin_list, coin_data, market_data
+
+
+### Operations on user DB (portfolio management) ###
+
+# retrieve portfolio positions from user DB
+def get_user_portfolio(user, coin_data):
+    positions = Position.objects.all().filter(user=user)
+    #print(positions)
+    positions_price_value = []
+    total_portfolio_value = 0
+    total_purchase_value = 0
+    for pos in positions:
+        id = pos.id
+        ticker = pos.ticker.upper()
+        quantity = pos.quantity
+        pprice = pos.price
+        #print(coin_data)
+        for coin in coin_data:
+            if ticker == coin.get("symbol"):
+                cprice = float(coin.get("price"))
+                break
+            cprice = 0
+        pvalue = float("{0:.2f}".format(pprice * quantity))
+        cvalue = float("{0:.2f}".format(cprice * quantity))
+        cperf = "{0:.2f}".format((cvalue / pvalue - 1) * 100)
+        total_portfolio_value += cvalue
+        total_purchase_value += pvalue
+        #append the data to our custom portfolio list object
+        positions_price_value.append({"id": id, "ticker": ticker, "quantity":quantity, "pprice": pprice, "cprice":cprice, "cvalue":cvalue, "cperf":cperf})
+
+    #reformat total values
+    total_purchase_value = "{0:.2f}".format(total_purchase_value)
+    total_portfolio_value = "{0:.2f}".format(total_portfolio_value)
+    #print(positions_price_value, total_portfolio_value)
+    return positions_price_value, total_purchase_value, total_portfolio_value
+
+# add position to user portfolio in DB
+def add_position(user, ticker, quantity, price):
+    # save game to DB
+    try:
+        position = Position(user=user, ticker=ticker, price=price, quantity=quantity)
+        position.save()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+
+#remove a position from portfolio
+def remove_position(user, pos_id):
+    print("Removing position...")
+    # save game to DB
+    try:
+        position_obj = Position.objects.get(pk=pos_id)
+        if position_obj.user == user:
+            position_obj.delete()
+            return True
+        else:
+            return False
+    except Exception as e:
+        print (e)
+        return False
+
+
+def fetch_current_price (request, ticker):
+    price = 0
+    return price
+
+
 ### DJANGO VIEWS ###
 
 def index(request):
+    # reset session variables (used for locally storing data reducing api calls)
     request.session["coin_data"] = None
     request.session["coin_list"] = None
     request.session["market_data"] = None
@@ -167,6 +256,58 @@ def index(request):
     else:
         user = False
     return render(request, "index.html", {"user":user})
+
+
+def portfolio(request):
+
+    if request.user.is_authenticated:
+        user = request.user
+    else:
+        user = False
+        return render(request, "error.html", {"user":user, "message":"Please login first to access portfolio functionality!"})
+
+    coin_list, coin_data, market_data = retrieve_data_session_or_new_api(request)
+
+    user_portfolio, total_purchase_value, total_value = get_user_portfolio(user, coin_data)
+    total_var =  "{0:.2f}".format((float(total_value) / float(total_purchase_value) - 1) * 100)
+    return render(request, "cryptoweb/portfolio.html", {"user":user, "user_portfolio":user_portfolio, "total_value":total_value, "total_purchase_value":total_purchase_value, 'performance':total_var, 'crypto_options':coin_list})
+
+
+def edit_portfolio(request):
+
+    if request.user.is_authenticated:
+        user = request.user
+    else:
+        user = False
+        return render(request, "error.html", {"user":user, "message":"Please login first to access portfolio functionality!"})
+
+    if request.method == "POST":
+        # retrieve data from POST request
+        ticker = request.POST["ticker"]
+        quantity = float(request.POST["quantity"])
+        price = float(request.POST["price"])
+        print(f"Adding Position {ticker}, {quantity} @ {price}...")
+        if add_position(user, ticker, quantity, price):
+            print(f"Position added.")
+        else:
+            print(f"Could NOT add position!")
+        return HttpResponseRedirect(reverse("portfolio"))
+
+    if request.method == "GET":
+        # retrieve data from POST request, are we deleting a position
+        try:
+            delete_item = request.GET["delete"]
+        except KeyError:
+            delete_item = False
+
+        if delete_item:
+            print(f"Removing position id: {delete_item}...")
+            if remove_position(user, delete_item):
+                print(f"Position with ID: {delete_item} deleted!")
+            else:
+                print(f"Position with ID: {delete_item} NOT deleted!")
+
+        return HttpResponseRedirect(reverse("portfolio"))
 
 
 def crypto(request):
@@ -187,20 +328,7 @@ def crypto(request):
     except KeyError:
         sort_by = None
 
-    # only retrieve data after 60 seconds
-    if time.time() > request.session["timestamp"] + 60:
-        market_data = get_market_data()
-        coin_list, coin_data = get_coin_data(request, limit=100)
-        request.session["market_data"] = market_data
-        request.session["coin_data"] = coin_data
-        request.session["coin_list"] = coin_list
-        request.session["timestamp"] = time.time()
-        print("New market data stored in session at ", request.session["timestamp"])
-    else:
-        print("Reading data from session...")
-        market_data = request.session["market_data"]
-        coin_list =request.session["coin_list"]
-        coin_data = request.session["coin_data"]
+    coin_list, coin_data, market_data = retrieve_data_session_or_new_api(request)
 
     # sort data if needed (default order is by market_cap)
     if sort_by:
@@ -217,7 +345,8 @@ def crypto(request):
     time_options = timeList.keys()
     currency_options = currencyList.keys()
 
-    return render(request, "cryptoweb/crypto.html", {'resources':CDN.render(), 'options':coin_list, 'user':user, 'time_options':time_options, 'currency_options':currency_options, 'coin_data':coin_data, 'market_data': market_data})
+    print(market_data)
+    return render(request, "cryptoweb/crypto.html", {'resources':CDN.render(), 'crypto_options':coin_list, 'user':user, 'time_options':time_options, 'currency_options':currency_options, 'coin_data':coin_data, 'market_data': market_data})
 
 
 def crypto_plot(request):
@@ -283,21 +412,20 @@ def register(request):
     if request.method == "POST":
         username = request.POST["username"]
         password = request.POST["password"]
-        first_name = request.POST["first_name"]
-        last_name = request.POST["last_name"]
-        email = request.POST["email"]
+        try:
+            email = request.POST["email"]
+        except KeyError:
+            email = username
 
-
+        # check for unique username
         if len(User.objects.all().filter(username=username)) > 0:
             return render(request, "error.html", {"message": "Username already in use.", "user":False})
-        if len(User.objects.all().filter(email=email)) > 0:
-            return render(request, "error.html", {"message": "E-mail already in use.", "user":False})
 
-        new_user = User.objects.create_user(username=username, password=password, first_name=first_name, last_name=last_name, email=email)
+        new_user = User.objects.create_user(username=username, password=password, email=email)
         new_user.save()
-        print("User created:", username, password, first_name, last_name, email)
+        print("User created:", username, password, email)
 
         user = authenticate(request, username=username, password=password)
         login(request, user)
-        print(user)
+        print("Logged in as: ", user)
         return HttpResponseRedirect(reverse("index"))

@@ -21,19 +21,27 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+print("Settings is retrieving Django Secret KEY...")
+print("Django is running on PID: ", os.getpid())
+SECRET_KEY = None
+
 try:
     SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
     print ("Secret Key found in environment!")
 except KeyError:
     print ("Secret Key Not found in environment!")
-    try:
-        from config import DJANGO_SECRET_KEY
-        SECRET_KEY = DJANGO_SECRET_KEY
-        print ("Secret Key found in config file!")
-    except Exception:
-        print ("Secret Key Not found in config file!")
-        print ("No Secret Key found! Bye.")
-        sys.exit()
+
+try:
+    from config import DJANGO_SECRET_KEY
+    SECRET_KEY = DJANGO_SECRET_KEY
+    print ("Secret Key found in config file!")
+except Exception:
+    print ("Secret Key Not found in config file!")
+
+if not SECRET_KEY: # if no KEY found exit
+    print ("No Secret Key found! Bye.")
+    sys.exit()
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
