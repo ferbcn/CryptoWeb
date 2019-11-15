@@ -9,16 +9,16 @@ DB driven user access and storage of user generated data
 ## Features & Challenges
 ### Python Django backend
   - User creation and identification
-  - Sqlite3 DB for user generated data storage
+  - Sqlite3 DB for user portfolio
 
 ### Crypto:
-- Different APIs
-- Data retrieval, date&time manipulation
+- use of different APIs
+- data retrieval, date&time manipulation, string formating
 - Responsive Charts generated with Bokeh
 - Responsive data tables (hide columns on small screens)
 
-## TODO:
-- User Portfolio: add, remove coins
+### User Database
+- user portfolio with coin price retrieval
 
 ## TO THINK:
 - price notifications system...
