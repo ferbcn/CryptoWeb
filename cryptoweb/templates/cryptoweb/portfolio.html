@@ -7,9 +7,8 @@
 
 {% block body %}
 
-
     <div class="container" id="content">
-        <h4>My Portfolio</h4>
+        <h5>My Portfolio</h5>
     </div>
 
     <div class="container" id="crypto_input">
@@ -18,15 +17,15 @@
               <div class="row">
                     <div class="col">
                         Symbol:
-                        <select id="input_ticker" class="form-control" name="ticker">
-                          {% for crypto in crypto_options %}
-                            <option value="{{ crypto.ticker }}">{{ crypto.ticker }}</option>
-                          {% endfor %}
-                        </select>
+                              <select id="input_ticker" class="form-control" name="ticker">
+                                {% for crypto in crypto_options %}
+                                  <option value="{{ crypto.ticker }}">{{ crypto.ticker }}</option>
+                                {% endfor %}
+                              </select>
                     </div>
                     <div class="col">
                         Price:
-                        <input id="input_price" type="text" class="form-control" name="price" placeholder="8716.55">
+                        <input id="input_price" type="text" class="form-control" name="price" required">
                     </div>
                     <div class="col">
                         Quantity:
@@ -66,6 +65,11 @@
               Del.
             </div>
         </div>
+
+    </div>
+
+    <div class="container coindata">
+
         {% for position in user_portfolio %}
           <div class="row data_content" style="text-align: right;">
               <div class="col link" style="text-align: center">
@@ -98,7 +102,7 @@
     <br>
 
     <div class="container" id="value_box">
-        <div class="row" style="text-align: right; color: lightgrey;">
+        <div class="row" style="text-align: center">
             <div class="col">
               <h6>Purchase Value:</h6>
             </div>
@@ -109,7 +113,7 @@
             </div>
         </div>
 
-        <div class="row" style="text-align: right">
+        <div class="row" style="text-align: center">
             <div class="col">
               <h5>Current Value:</h5>
             </div>
@@ -120,9 +124,9 @@
             </div>
         </div>
 
-        <div class="row" style="text-align: right">
+        <div class="row" style="text-align: center">
             <div class="col">
-              <h5>Var.:</h5>
+              <h5>Performance:</h5>
             </div>
             <div class="col">
               {% if performance %}
@@ -141,21 +145,26 @@
                 set_price();
             };
 
+            var coin_data = [];
+
             document.addEventListener('DOMContentLoaded', () => {
-                set_price();
+                  coin_data = {{ coin_data|safe }};
+                  //console.log(data);
+                  set_price();
             });
 
-
-            function set_price(sym){
-              sym = document.getElementById('input_ticker').value
-              price = get_price(sym);
+            function set_price(){
+              sym = document.getElementById('input_ticker').value;
+              var arrayLength = coin_data.length;
+              for (var i = 0; i < arrayLength; i++) {
+                  if (coin_data[i]["symbol"] === sym){
+                    price = coin_data[i]["price"];
+                    console.log("price set to ", price);
+                  }
+              }
               document.getElementById('input_price').value = price;
             }
 
-            function get_price(sym){
-              // TO-DO: make http request (fetch) and get current price for selected symbol
-              return 5555.55
-            }
 
         </script>
 

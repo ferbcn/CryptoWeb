@@ -8,11 +8,9 @@
 {% block body %}
 
   <div class="container" id="content">
-        <h4>Crypto Data</h4>
+        <h5>Crypto Data</h5>
 
-        <br>
         <div id="myplot"></div>
-        <br>
 
         <form id="chartparam">
           <div class="form-group row">
@@ -41,9 +39,10 @@
 
   </div>
 
-  <div class="container" style="font-size: sm;">
+  <div class="container">
+
     {% if coin_data %}
-      <h4>Top 100<div class="subtitle">prices in USD / BTC share: {{ market_data.btc_share }} / Total Market Cap: {{ market_data.total_market_cap }} / Volume 24h: {{ market_data.total_volume }}</div></h4>
+      <h5>Top 100<div class="subtitle">prices in USD / BTC share: {{ market_data.btc_share }} / Total Market Cap: {{ market_data.total_market_cap }} / Volume 24h: {{ market_data.total_volume }}</div></h5>
         <div class="row data_header">
           <div class="col-1">
             <a href="/crypto">#</a>
@@ -70,6 +69,8 @@
             <a href="/crypto?sort_by=change_24h">24h</a>
           </div>
         </div>
+    </div>
+    <div class="container coindata">
         {% for coin in coin_data %}
           <div href="" onclick="fetch_plot('{{ coin.symbol }}');return false;" class="row data_content" style="text-align: right;">
             <div class="col-1">

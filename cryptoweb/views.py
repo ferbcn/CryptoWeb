@@ -270,7 +270,7 @@ def portfolio(request):
 
     user_portfolio, total_purchase_value, total_value = get_user_portfolio(user, coin_data)
     total_var =  "{0:.2f}".format((float(total_value) / float(total_purchase_value) - 1) * 100)
-    return render(request, "cryptoweb/portfolio.html", {"user":user, "user_portfolio":user_portfolio, "total_value":total_value, "total_purchase_value":total_purchase_value, 'performance':total_var, 'crypto_options':coin_list})
+    return render(request, "cryptoweb/portfolio.html", {"user":user, "user_portfolio":user_portfolio, "total_value":total_value, "total_purchase_value":total_purchase_value, 'performance':total_var, 'crypto_options':coin_list, 'coin_data':coin_data})
 
 
 def edit_portfolio(request):

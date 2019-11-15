@@ -25,6 +25,9 @@ body {
   font-style: italic;
 }
 
+h5{
+  font-weight: normal;
+}
 
 #content{
   margin-top: 2%;
@@ -36,6 +39,12 @@ body {
 
 #crypto_input{
 
+}
+
+.coindata {
+  font-size: sm;
+  height: 50vh !important;
+  overflow: scroll;
 }
 
 .navbar-right {
@@ -60,16 +69,15 @@ body {
 .data_content{
   padding-top: 10px;
   padding-bottom: 10px;
-  border-radius: 1px;
+  border-radius: 0px;
   border-color: firebrick;
 }
 
 .data_content:hover{
-  margin-top: -2px;
   padding-top: 10px;
   padding-bottom: 10px;
-  border-style: ridge;
-  border-radius: 1px;
+  border-style: solid;
+  border-radius: 0px;
   border-color: firebrick;
   background-color: firebrick;
   color: white;
