@@ -20,5 +20,5 @@
 ### User Database
 - user portfolio with coin price retrieval
 
-## TO THINK:
+### To Think:
 - price notifications system...
