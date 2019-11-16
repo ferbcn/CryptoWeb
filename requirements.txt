@@ -2,3 +2,4 @@ Django>=2.0.11
 bokeh
 requests
 cryptocompy
+gunicorn
