@@ -30,24 +30,20 @@ try:
     print ("Secret Key found in environment!")
 except KeyError:
     print ("Secret Key Not found in environment!")
-
-try:
-    from config import DJANGO_SECRET_KEY
-    SECRET_KEY = DJANGO_SECRET_KEY
-    print ("Secret Key found in config file!")
-except Exception:
-    print ("Secret Key Not found in config file!")
-
-if not SECRET_KEY: # if no KEY found exit
-    print ("No Secret Key found! Bye.")
-    sys.exit()
-
+    try:
+        from config import DJANGO_SECRET_KEY
+        SECRET_KEY = DJANGO_SECRET_KEY
+        print ("Secret Key found in config file!")
+    except Exception:
+        print ("Secret Key Not found in config file!")
+        print ("No secret Key found! Bye.")
+        sys.exit()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 #ALLOWED_HOSTS = ['localhost', '192.168.1.148', '127.0.0.1']
-ALLOWED_HOSTS = ['f-cryptox.herokuapp.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'f-cryptox.herokuapp.com']
 
 
 # Application definition
@@ -97,12 +93,45 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+# local DB: sqlit3
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+"""
+
+# PostgreSQL DB on Heroku (read environmental variables)
+try:
+    # Heroku PostgreSQL Database
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ["Database"],
+            'USER': os.environ["User"],
+            'PASSWORD': os.environ["Password"],
+            'HOST': os.environ["Host"],
+            'PORT': os.environ["Port"],
+        }
+    }
+    #Host, Database, User, Password, Port
+    SECRET_KEY = os.environ[""]
+    print ("DB config found in environment!")
+except KeyError:
+    print ("DB config Not found in environment!")
+    try:
+        from config import DATABASES
+        print ("DB config found in config file!")
+    except Exception:
+        print ("DB config Not found in config file!")
+        print ("No DB config found! Bye.")
+        sys.exit()
+
+
+# Heroku PostgreSQL DB
+#   Database Config or URL loaded from environment or config.py
 
 
 # Password validation

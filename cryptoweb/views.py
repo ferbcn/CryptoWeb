@@ -197,7 +197,10 @@ def get_user_portfolio(user, coin_data):
             cprice = 0
         pvalue = float("{0:.2f}".format(pprice * quantity))
         cvalue = float("{0:.2f}".format(cprice * quantity))
-        cperf = "{0:.2f}".format((cvalue / pvalue - 1) * 100)
+        try:
+            cperf = "{0:.2f}".format((cvalue / pvalue - 1) * 100)
+        except ZeroDivisionError:
+            cperf = 0
         total_portfolio_value += cvalue
         total_purchase_value += pvalue
         #append the data to our custom portfolio list object
@@ -269,7 +272,12 @@ def portfolio(request):
     coin_list, coin_data, market_data = retrieve_data_session_or_new_api(request)
 
     user_portfolio, total_purchase_value, total_value = get_user_portfolio(user, coin_data)
-    total_var =  "{0:.2f}".format((float(total_value) / float(total_purchase_value) - 1) * 100)
+
+    # catch division by zero
+    try:
+        total_var =  "{0:.2f}".format((float(total_value) / float(total_purchase_value) - 1) * 100)
+    except ZeroDivisionError:
+        total_var = 0
     return render(request, "cryptoweb/portfolio.html", {"user":user, "user_portfolio":user_portfolio, "total_value":total_value, "total_purchase_value":total_purchase_value, 'performance':total_var, 'crypto_options':coin_list, 'coin_data':coin_data})
 
 
