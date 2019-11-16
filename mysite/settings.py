@@ -116,9 +116,8 @@ try:
             'PORT': os.environ["Port"],
         }
     }
-    #Host, Database, User, Password, Port
-    SECRET_KEY = os.environ[""]
     print ("DB config found in environment!")
+    print(DATABASES)
 except KeyError:
     print ("DB config Not found in environment!")
     try:
