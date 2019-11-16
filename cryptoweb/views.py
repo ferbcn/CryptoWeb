@@ -38,7 +38,7 @@ from .models import Position
 #import math
 
 coinList = {"BTC":"orange", "XMR":"red", "ETH":"grey", "NEO":"lightgreen", "XLM":"lightblue", "LTC":"silver", "XRP":"blue", "BCH":"green"}
-timeList = {"hour":{"period":"minute", "count":60},"day":{"period":"minute", "count":1440}, "week":{"period":"hour", "count":168}, "month":{"period":"hour", "count":720},"year":{"period":"day", "count":366}}
+timeList = {"day":{"period":"minute", "count":1440}, "hour":{"period":"minute", "count":60}, "week":{"period":"hour", "count":168}, "month":{"period":"hour", "count":720},"year":{"period":"day", "count":366}}
 currencyList = {"USD":"USD", "EUR":"EUR", "CHF":"CHF", "BTC":"BTC"}
 
 # retriev CMC API KEY and Django Security Key from environment or from file
@@ -220,10 +220,16 @@ def get_user_portfolio(user, coin_data):
         positions_price_value.append({"id": id, "ticker": ticker, "quantity":quantity, "pprice": float2str(pprice), "cprice":float2str(cprice), "cvalue":float2str(cvalue), "cperf":cperf})
 
     #reformat total values
-    total_purchase_value = "{0:.2f}".format(total_purchase_value)
-    total_portfolio_value = "{0:.2f}".format(total_portfolio_value)
+    total_purchase_value_str = '{:,}'.format(round(total_purchase_value))
+
+    total_portfolio_value_str = '{:,}'.format(float("{0:.2f}".format(total_portfolio_value)))
     #print(positions_price_value, total_portfolio_value)
-    return positions_price_value, total_purchase_value, total_portfolio_value
+    # catch division by zero
+    try:
+        total_var =  "{0:.2f}".format((float(total_portfolio_value) / float(total_purchase_value) - 1) * 100)
+    except ZeroDivisionError:
+        total_var = 0
+    return positions_price_value, total_purchase_value_str, total_portfolio_value_str, total_var
 
 # add position to user portfolio in DB
 def add_position(user, ticker, quantity, price):
@@ -284,13 +290,9 @@ def portfolio(request):
 
     coin_list, coin_data, market_data = retrieve_data_session_or_new_api(request)
 
-    user_portfolio, total_purchase_value, total_value = get_user_portfolio(user, coin_data)
+    user_portfolio, total_purchase_value, total_value, total_var = get_user_portfolio(user, coin_data)
 
-    # catch division by zero
-    try:
-        total_var =  "{0:.2f}".format((float(total_value) / float(total_purchase_value) - 1) * 100)
-    except ZeroDivisionError:
-        total_var = 0
+
     return render(request, "cryptoweb/portfolio.html", {"user":user, "user_portfolio":user_portfolio, "total_value":total_value, "total_purchase_value":total_purchase_value, 'performance':total_var, 'crypto_options':coin_list, 'coin_data':coin_data})
 
 
