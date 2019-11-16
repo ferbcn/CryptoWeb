@@ -95,9 +95,9 @@ def get_market_data():
         status = data.get("status").get("error_code")
         m_data = data.get("data")
 
-        m_cap = m_data.get("quote").get("USD").get("total_market_cap")
-        vol24 = m_data.get("quote").get("USD").get("total_volume_24h")
-        btc_dom = m_data.get("btc_dominance")
+        m_cap = '{:,}'.format(round(m_data.get("quote").get("USD").get("total_market_cap")/1000000))
+        vol24 = '{:,}'.format(round(m_data.get("quote").get("USD").get("total_volume_24h")/1000000))
+        btc_dom = '{:.1%}'.format(m_data.get("btc_dominance")/100)
 
         market_data = {"total_market_cap":m_cap, "total_volume":vol24, "btc_share":btc_dom}
     else:
@@ -107,6 +107,16 @@ def get_market_data():
     #print(market_data)
     return market_data
 
+def float2str(num):
+    if num >= 1000:
+        num_str = "{0:.2f}".format(num)
+    elif num >= 100:
+        num_str = "{0:.3f}".format(num)
+    elif num >= 10:
+        num_str = "{0:.4f}".format(num)
+    else:
+        num_str = "{0:.5f}".format(num)
+    return num_str
 
 # retrives top100 coins with infos from from CMC (requieres API KEY)
 def get_coin_data(request, limit=100):
@@ -145,7 +155,10 @@ def get_coin_data(request, limit=100):
                 "cmc_rank":item.get("cmc_rank"),
                 "market_cap":round(item.get("quote").get("USD").get("market_cap")/1000000),
                 "volume":round(item.get("quote").get("USD").get("volume_24h")/1000000),
-                "price": "{0:.2f}".format(item.get("quote").get("USD").get("price")),
+                "market_cap_str":'{:,}'.format(round(item.get("quote").get("USD").get("market_cap")/1000000)),
+                "volume_str":'{:,}'.format(round(item.get("quote").get("USD").get("volume_24h")/1000000)),
+                "price": item.get("quote").get("USD").get("price"),
+                "price_str": float2str(float(item.get("quote").get("USD").get("price"))),
                 "change_24h":("{0:.2f}".format(item.get("quote").get("USD").get("percent_change_24h"))),
                 "change_1h":("{0:.2f}".format(item.get("quote").get("USD").get("percent_change_1h"))),
             })
@@ -195,8 +208,8 @@ def get_user_portfolio(user, coin_data):
                 cprice = float(coin.get("price"))
                 break
             cprice = 0
-        pvalue = float("{0:.2f}".format(pprice * quantity))
-        cvalue = float("{0:.2f}".format(cprice * quantity))
+        pvalue = float(pprice * quantity)
+        cvalue = float(cprice * quantity)
         try:
             cperf = "{0:.2f}".format((cvalue / pvalue - 1) * 100)
         except ZeroDivisionError:
@@ -204,7 +217,7 @@ def get_user_portfolio(user, coin_data):
         total_portfolio_value += cvalue
         total_purchase_value += pvalue
         #append the data to our custom portfolio list object
-        positions_price_value.append({"id": id, "ticker": ticker, "quantity":quantity, "pprice": pprice, "cprice":cprice, "cvalue":cvalue, "cperf":cperf})
+        positions_price_value.append({"id": id, "ticker": ticker, "quantity":quantity, "pprice": float2str(pprice), "cprice":float2str(cprice), "cvalue":float2str(cvalue), "cperf":cperf})
 
     #reformat total values
     total_purchase_value = "{0:.2f}".format(total_purchase_value)

@@ -42,7 +42,7 @@
   <div class="container">
 
     {% if coin_data %}
-      <h5>Top 100<div class="subtitle">prices in USD / BTC share: {{ market_data.btc_share }} / Total Market Cap: {{ market_data.total_market_cap }} / Volume 24h: {{ market_data.total_volume }}</div></h5>
+      <h5>Top 100<div class="subtitle">prices in USD / BTC share: {{ market_data.btc_share }} / Total Market Cap: {{ market_data.total_market_cap }} / Volume 24h: {{ market_data.total_volume }} / M.Cap. and Volume in M</div></h5>
         <div class="row data_header">
           <div class="col-1">
             <a href="/crypto">#</a>
@@ -83,13 +83,13 @@
               {{ coin.symbol }}
             </div>
             <div class="col d-none d-lg-block d-xl-block">
-              {{ coin.market_cap }}
+              {{ coin.market_cap_str }}
             </div>
             <div class="col d-none d-lg-block d-xl-block">
-              {{ coin.volume }}
+              {{ coin.volume_str }}
             </div>
             <div class="col">
-              {{ coin.price }}
+              {{ coin.price_str }}
             </div>
             <div class="col">
               {{ coin.change_1h }}
