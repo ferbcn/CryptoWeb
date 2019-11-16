@@ -43,7 +43,7 @@ except KeyError:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-#ALLOWED_HOSTS = ['localhost', '192.168.1.148', '127.0.0.1']
+#ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'f-cryptox.herokuapp.com']
 
 
@@ -119,7 +119,7 @@ try:
         }
     }
     print ("DB config found in environment!")
-    print(DATABASES)
+    #print(DATABASES)
 except KeyError:
     print ("DB config Not found in environment!")
     try:
