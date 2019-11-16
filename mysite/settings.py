@@ -127,7 +127,7 @@ except KeyError:
     except Exception:
         print ("DB config Not found in config file!")
         print ("No DB config found! Bye.")
-        sys.exit()
+        #sys.exit()
 
 
 # Heroku PostgreSQL DB
