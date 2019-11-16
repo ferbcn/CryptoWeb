@@ -3,3 +3,8 @@ bokeh
 requests
 cryptocompy
 gunicorn
+django_extensions
+#gunicorn==19.9.0
+#psycopg2-binary
+#django_heroku
+#whitenoise
