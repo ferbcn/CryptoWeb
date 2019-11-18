@@ -54,13 +54,13 @@ h5{
 
 .coindata {
   font-size: sm;
-  height: 80vh !important;
+  height: 70vh !important;
   overflow: scroll;
 }
 
 .portfolio-data {
   font-size: sm;
-  height: 60vh !important;
+  height: 50vh !important;
   overflow: scroll;
 }
 
@@ -94,11 +94,11 @@ h5{
 
 #value_box{
   /* background: rgba(200,255,200,1); */
-  background-color: #F8F9FA;
-  color: white;
+  background-color: white;
+  color: grey;
   padding-top: 1.5vh;
   padding-bottom: 1.5vh;
-  width: 80%;
+  width: 100%;
 
 }
 
