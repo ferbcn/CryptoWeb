@@ -11,7 +11,7 @@ a:hover {
 }
 
 body {
-    background-color: white;
+    background-color: #F8F9FA;
 }
 
 .nav-item {
@@ -30,6 +30,9 @@ h5{
 }
 
 #content{
+  padding-top: 5px;
+  padding-bottom: 5px;
+  background-color: white;
   margin-top: 2%;
 }
 
@@ -41,20 +44,26 @@ h5{
 
 }
 
+#chartparam{
+  margin-top: 5px;
+}
+
+.data-window {
+  .background-color: red;
+}
+
 .coindata {
   font-size: sm;
   height: 80vh !important;
   overflow: scroll;
 }
 
-.navbar-right {
-  margin-right: 10px;
-  margin-left: auto;
+.portfolio-data {
+  font-size: sm;
+  height: 60vh !important;
+  overflow: scroll;
 }
 
-.navbar-red {
-  background-color: firebrick;
-}
 
 .data_header{
   background-color: firebrick;
@@ -89,7 +98,7 @@ h5{
   color: white;
   padding-top: 1.5vh;
   padding-bottom: 1.5vh;
-  width: 70%;
+  width: 80%;
 
 }
 

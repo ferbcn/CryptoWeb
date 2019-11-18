@@ -37,9 +37,7 @@
 
       </form>
 
-  </div>
-
-  <div class="container">
+    <div class="container">
 
     {% if coin_data %}
       <h5>Top 100<div class="subtitle">prices in USD / BTC share: {{ market_data.btc_share }} / Total Market Cap: {{ market_data.total_market_cap }} / Volume 24h: {{ market_data.total_volume }} / M.Cap. and Volume in M</div></h5>
@@ -70,39 +68,41 @@
           </div>
         </div>
     </div>
-    <div class="container coindata">
-        {% for coin in coin_data %}
-          <div href="" onclick="fetch_plot('{{ coin.symbol }}');return false;" class="row data_content" style="text-align: right;">
-            <div class="col-1">
-              {{ coin.cmc_rank }}
+
+      <div class="container coindata">
+          {% for coin in coin_data %}
+            <div href="" onclick="fetch_plot('{{ coin.symbol }}');return false;" class="row data_content" style="text-align: right;">
+              <div class="col-1">
+                {{ coin.cmc_rank }}
+              </div>
+              <div class="col link d-none d-lg-block d-xl-block" style="text-align: left">
+                {{ coin.name }}
+              </div>
+              <div class="col" style="text-align: center;">
+                {{ coin.symbol }}
+              </div>
+              <div class="col d-none d-lg-block d-xl-block">
+                {{ coin.market_cap_str }}
+              </div>
+              <div class="col d-none d-lg-block d-xl-block">
+                {{ coin.volume_str }}
+              </div>
+              <div class="col">
+                {{ coin.price_str }}
+              </div>
+              <div class="col">
+                {{ coin.change_1h }}
+              </div>
+              <div class="col">
+                {{ coin.change_24h }}
+              </div>
             </div>
-            <div class="col link d-none d-lg-block d-xl-block" style="text-align: left">
-              {{ coin.name }}
-            </div>
-            <div class="col" style="text-align: center;">
-              {{ coin.symbol }}
-            </div>
-            <div class="col d-none d-lg-block d-xl-block">
-              {{ coin.market_cap_str }}
-            </div>
-            <div class="col d-none d-lg-block d-xl-block">
-              {{ coin.volume_str }}
-            </div>
-            <div class="col">
-              {{ coin.price_str }}
-            </div>
-            <div class="col">
-              {{ coin.change_1h }}
-            </div>
-            <div class="col">
-              {{ coin.change_24h }}
-            </div>
-          </div>
-        {% endfor %}
-    {% endif %}
-  </div>
+          {% endfor %}
+      {% endif %}
+    </div>
 
 </div>
+
 
       <script>
 

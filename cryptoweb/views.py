@@ -266,6 +266,7 @@ def fetch_current_price (request, ticker):
 
 ### DJANGO VIEWS ###
 
+# deafualt view (landing page), resets session varaibles (allows fror fetch of fresh data)
 def index(request):
     # reset session variables (used for locally storing data reducing api calls)
     request.session["coin_data"] = None
@@ -277,7 +278,7 @@ def index(request):
         user = request.user
     else:
         user = False
-    return render(request, "index.html", {"user":user})
+    return HttpResponseRedirect(reverse("crypto"))
 
 
 def portfolio(request):

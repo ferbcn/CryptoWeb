@@ -9,7 +9,7 @@
 
     <div class="container" id="content">
         <h5>My Portfolio</h5>
-    </div>
+
 
     <div class="container" id="crypto_input">
           <form action="{% url 'editportfolio' %}" method="post">
@@ -68,7 +68,7 @@
 
     </div>
 
-    <div class="container coindata">
+    <div class="container portfolio-data">
 
         {% for position in user_portfolio %}
           <div class="row data_content" style="text-align: right;">
@@ -98,11 +98,12 @@
 
     </div>
 
+</div>
 
     <br>
 
     <div class="container" id="value_box">
-        
+
         <div class="row" style="text-align: center">
             <div class="col">
               <h5>Current Value:</h5>
