@@ -43,7 +43,7 @@ h5{
 
 .coindata {
   font-size: sm;
-  height: 50vh !important;
+  height: 80vh !important;
   overflow: scroll;
 }
 
@@ -96,7 +96,7 @@ h5{
 
 #myplot{
   width: 100%;
-  min-height: 30vh;
+  /* min-height: 30vh; */
 }
 
 .fade_in{

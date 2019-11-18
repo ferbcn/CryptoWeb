@@ -111,8 +111,7 @@
             });
 
             function fetch_plot(sym){
-                  // clear previous graph
-                  document.getElementById("myplot").innerHTML = "";
+
                   document.getElementById("myplot").classList.remove('fade_in');
 
                   var coin_sel;
@@ -130,7 +129,7 @@
                   var url = "/crypto_plot?coin_option=" + coin_sel + "&time_option=" + time_sel.value + "&currency_option=" + curr_sel.value;
                   fetch(url)
                     .then(function(response) { return response.json(); })
-                    .then(function(item) { document.getElementById("myplot").classList.add('fade_in'); Bokeh.embed.embed_item(item); })
+                    .then(function(item) { document.getElementById("myplot").classList.add('fade_in'); document.getElementById("myplot").innerHTML = "";Bokeh.embed.embed_item(item); })
                   // window.history.pushState('page', 'Title', '/');
 
 
