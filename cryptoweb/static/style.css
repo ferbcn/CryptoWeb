@@ -60,7 +60,7 @@ h5{
 
 .portfolio-data {
   font-size: sm;
-  height: 50vh !important;
+  height: 40vh !important;
   overflow: scroll;
 }
 
@@ -73,32 +73,51 @@ h5{
   padding-top: 16px;
   padding-bottom: 16px;
   color: white;
+  border-radius: 10px;
 }
 
 .data_content{
   padding-top: 10px;
   padding-bottom: 10px;
-  border-radius: 0px;
+  border-radius: 10px;
   border-color: firebrick;
+  margin-top: 1px;
+  border-top: 1px;
+
 }
 
 .data_content:hover{
   padding-top: 10px;
   padding-bottom: 10px;
   border-style: solid;
-  border-radius: 0px;
+  border-radius: 10px;
   border-color: indianred;
   background-color: indianred;
   color: white;
 }
 
-#value_box{
+.value_box{
   /* background: rgba(200,255,200,1); */
   background-color: white;
   color: grey;
   padding-top: 1.5vh;
   padding-bottom: 1.5vh;
   width: 100%;
+  border-radius: 10px;
+
+}
+
+.value_box:hover{
+  /* background: rgba(200,255,200,1); */
+  background-color: white;
+  color: grey;
+  padding-top: 1.5vh;
+  padding-bottom: 1.5vh;
+  width: 100%;
+  border-radius: 10px;
+  border-color: indianred;
+  background-color: indianred;
+  color: white;
 
 }
 

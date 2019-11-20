@@ -62,15 +62,11 @@ except KeyError:
 def get_graph_data(coin, currency, period):
     times = []
     prices = []
-
-    historical = price.get_historical_data(coin, currencyList[currency], timeList[period]["period"], info='close', aggregate=1, limit=timeList[period]["count"])
+    historical = price.get_historical_data(coin, currency, timeList[period]["period"], info='close', aggregate=1, limit=timeList[period]["count"])
     for data in historical:
         dt = datetime.datetime.strptime(data["time"], "%Y-%m-%d %H:%M:%S")
         times.append(dt)
-        if coin == currency:
-            prices.append(1)
-        else:
-            prices.append(data["close"])
+        prices.append(data["close"])
     return times, prices
 
 # retrives top100 coins with infos from from CMC (requieres API KEY)
